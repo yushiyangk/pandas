@@ -84,7 +84,8 @@ class TestSeriesArgsort:
         true_indexer = ser.argsort(stable=True)
         false_indexer = ser.argsort(stable=False)
 
-        true_expected = np.argsort(ser.values, kind="stable")  # np.argsort(stable=) kwarg is absent in min supported version 1.26
+        # np.argsort(stable=) kwarg is absent in min supported version 1.26
+        true_expected = np.argsort(ser.values, kind="stable")
         false_expected = np.argsort(ser.values, kind="quicksort")
 
         tm.assert_numpy_array_equal(false_indexer.values, false_expected)
@@ -95,16 +96,16 @@ class TestSeriesArgsort:
 
         with tm.assert_produces_warning(
             (Pandas4Warning, Pandas4Warning),
-            check_stacklevel=False,
             match=(
                 "Starting with pandas version 4.0 all arguments of argsort except for "
-                "the argument 'self, axis, kind, order' will be keyword-only."
+                "the arguments 'axis', 'kind' and 'order' will be keyword-only."
             ),
         ):
             true_indexer = ser.argsort(0, None, None, True)
             false_indexer = ser.argsort(0, None, None, False)
 
-        true_expected = np.argsort(ser.values, kind="stable")  # np.argsort(stable=) kwarg is absent in min supported version 1.26
+        # np.argsort(stable=) kwarg is absent in min supported version 1.26
+        true_expected = np.argsort(ser.values, kind="stable")
         false_expected = np.argsort(ser.values, kind="quicksort")
 
         tm.assert_numpy_array_equal(false_indexer.values, false_expected)
@@ -144,7 +145,6 @@ class TestSeriesArgsort:
         ser = argsort_stability_series
         with tm.assert_produces_warning(
             Pandas4Warning,
-            check_stacklevel=False,
             match="`kind` and `stable` can't be provided at the same time.",
         ):
             ser.argsort(kind=kind, stable=stable)
@@ -185,7 +185,6 @@ class TestSeriesArgsort:
 
         with tm.assert_produces_warning(
             (Pandas4Warning, Pandas4Warning),
-            check_stacklevel=False,
             match="`order` should match Series.name if specified",
         ):
             ser.argsort(order="something else")
